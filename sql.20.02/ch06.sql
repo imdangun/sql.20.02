@@ -174,3 +174,53 @@ where e.department_id = d.department_id(+);
 select worker.last_name||' works for '||manager.last_name
 from employees worker, employees manager
 where worker.manager_id = manager.employee_id;
+
+-- 실습
+--1.
+select location_id, street_address, city, state_province, country_name
+from locations natural join countries;
+
+--2.
+select last_name, department_id, department_name
+from employees join departments
+using (department_id);
+
+--3.
+select e.last_name, e.job_id, e.department_id, d.department_name
+from employees e join departments d
+on e.department_id = d.department_id
+join locations l
+on d.location_id = l.location_id
+where lower(l.city) = 'toronto';
+
+--4.
+select w.last_name "Employee", w.employee_id "Emp#",
+    m.last_name "Manager", m.employee_id "Mgr#"
+from employees w join employees m
+on w.manager_id = m.manager_id;
+
+--5.
+select w.last_name "Employee", w.employee_id "Emp#",
+    m.last_name "Manager", m.employee_id "Mgr#"
+from employees w left outer join employees m
+on w.manager_id = m.employee_id
+order by 2;
+
+--6.
+select e.department_id departments, e.last_name employee, c.last_name colleague
+from employees e join employees c
+on e.department_id = c.department_id
+where e.employee_id <> c.employee_id
+order by e.department_id, e.last_name, c.last_name;
+
+--7.
+select e.last_name, e.hire_date
+from employees e join employees davies
+on davies.last_name = 'Davies'
+and davies.hire_date < e.hire_date;
+
+--8.
+select w.last_name, w.hire_date, m.last_name, m.hire_date
+from employees w join employees m
+on w.manager_id = m.employee_id
+where w.hire_date < m.hire_date;
