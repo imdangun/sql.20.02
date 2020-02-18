@@ -86,7 +86,7 @@ end;
 select * from sa_reps where id>=400;
 rollback;
 select * from sa_reps where id>=400;
--- PL/SQL¹® Àç½ÇÇàÇÑ´Ù.
+-- PL/SQLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 commit;
 select * from sa_reps where id>=400;
 --
@@ -158,4 +158,64 @@ select employee_id, department_id
 from emp
 where department_id = 90;      
       
+commit;
+
+
+-- ì‹¤ìŠµ
+drop table my_employee;
+
+create table my_employee(
+    id number(4) primary key,
+    last_name varchar2(25),
+    first_name varchar2(25),
+    userid varchar2(8),
+    salary number(9,2));
+    
+--1.
+desc my_employee
+
+--2.
+insert into my_employee
+values (1, 'Patel', 'Ralph', 'rpatel', 895);
+
+--3.
+insert into my_employee(id, last_name, first_name, userid, salary)
+values (2, 'Dancs', 'Betty', 'bdancs', 860);
+
+--4.
+select *
+from my_employee;
+
+--5.
+insert into my_employee values (3, 'Biri', 'Ben', 'bbiri', 1100);
+insert into my_employee values (4, 'Newman', 'Chad', 'cnewman', 750);
+insert into my_employee values (5, 'Ropeburn', 'Audrey', 'aropebur', 1550);
+
+--6.
+commit;
+
+--7.
+update my_employee
+set last_name = 'Drexler'
+where id = 3;
+
+--8.
+update my_employee
+set salary = 1000
+where salary < 900;
+
+--9.
+delete from my_employee
+where last_name = 'Dancs';
+
+--10.
+savepoint step10;
+
+--11.
+delete my_employee;
+
+--12.
+rollback to step10;
+
+--13.
 commit;
