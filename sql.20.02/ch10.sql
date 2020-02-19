@@ -15,7 +15,7 @@ commit;
 
 select * from hire_dates;
 --
--- system user ·Î±×ÀÎ
+-- system user ï¿½Î±ï¿½ï¿½ï¿½
 drop user you cascade;
 
 create user you identified by you
@@ -25,7 +25,7 @@ grant connect,resource to you;
 
 grant all on hr.departments to you;
 --
--- you user ·Î±×ÀÎ
+-- you user ï¿½Î±ï¿½ï¿½ï¿½
 drop table depts cascade constraints;
 drop table emps cascade constraints;
 
@@ -46,19 +46,19 @@ constraint emps_deptid_fk foreign key(department_id)
 insert into depts values(100, 'Development');
 insert into emps values(500, 'musk', 'musk@gmail.com', 5000, 100);
 commit;
-delete depts; -- error, fk À§¹è
+delete depts; -- error, fk ï¿½ï¿½ï¿½ï¿½
 
-insert into depts values(100, 'Marketing'); -- error, pkÀ§¹è
-insert into depts values(null, 'Marketing'); --error, pkÀ§¹è
+insert into depts values(100, 'Marketing'); -- error, pkï¿½ï¿½ï¿½ï¿½
+insert into depts values(null, 'Marketing'); --error, pkï¿½ï¿½ï¿½ï¿½
 
 insert into emps values(
-  501, null, 'good@gmail.com', 6000, 100); -- error, nnÀ§¹è
+  501, null, 'good@gmail.com', 6000, 100); -- error, nnï¿½ï¿½ï¿½ï¿½
 insert into emps values(
-  501, 'abel', 'musk@gmail.com', 6000, 100); --error, ukÀ§¹è
+  501, 'abel', 'musk@gmail.com', 6000, 100); --error, ukï¿½ï¿½ï¿½ï¿½
 insert into emps values(
-  501, 'abel', 'good@gmail.com', 900, 100); --error, ckÀ§¹è
+  501, 'abel', 'good@gmail.com', 900, 100); --error, ckï¿½ï¿½ï¿½ï¿½
 insert into emps values(
-  501, 'abel', 'good@gmail.com', 6000, 200); --error, fkÀ§¹è
+  501, 'abel', 'good@gmail.com', 6000, 200); --error, fkï¿½ï¿½ï¿½ï¿½
 --
 drop table employees cascade constraints;
 
@@ -96,13 +96,13 @@ dong_id number(4) primary key,
 dong_name varchar2(12) not null,
 gu_id number(3) references gu(gu_id) on delete set null);
 
-insert into gu values(100,'°­³²±¸');
-insert into gu values(200,'³ë¿ø±¸');
-insert into dong values(5000,'¾Ð±¸Á¤µ¿',null);
-insert into dong values(5001,'»ï¼ºµ¿',100);
-insert into dong values(5002,'¿ª»ïµ¿',100);
-insert into dong values(6001,'»ó°èµ¿',200);
-insert into dong values(6002,'Áß°èµ¿',200);
+insert into gu values(100,'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½');
+insert into gu values(200,'ï¿½ï¿½ï¿½ï¿½ï¿½');
+insert into dong values(5000,'ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½',null);
+insert into dong values(5001,'ï¿½ï¼ºï¿½ï¿½',100);
+insert into dong values(5002,'ï¿½ï¿½ï¿½ïµ¿',100);
+insert into dong values(6001,'ï¿½ï¿½èµ¿',200);
+insert into dong values(6002,'ï¿½ß°èµ¿',200);
 
 insert into dong2 select * from dong;
 commit;
@@ -125,12 +125,12 @@ constraint b_aid_fk foreign key(aid) references a(aid));
 --
 insert into a values(1);
 insert into b values(31,1);
-insert into b values(31,9); --error, fkÀ§¹è
+insert into b values(31,9); --error, fkï¿½ï¿½ï¿½ï¿½
 alter table b disable constraint b_aid_fk;
 insert into b values(31,9);
-alter table b enable validate constraint b_aid_fk; --error, fkÀ§¹è
+alter table b enable validate constraint b_aid_fk; --error, fkï¿½ï¿½ï¿½ï¿½
 alter table b enable novalidate constraint b_aid_fk;
-insert into b values(32,8); --error, fkÀ§¹è
+insert into b values(32,8); --error, fkï¿½ï¿½ï¿½ï¿½
 --
 drop table sub_departments;
 
@@ -167,3 +167,48 @@ where tname not like 'BIN%';
 select constraint_name, constraint_type, table_name
 from user_constraints
 where constraint_name not like 'BIN%';
+
+
+-- ì‹¤ìŠµ
+--1.
+drop table dept;
+
+create table dept (
+id number(7) constraint department_id_pk primary key,
+name varchar2(25));
+
+--2.
+insert into dept
+    select department_id, department_name
+    from departments;
+
+--3.
+drop table emp;
+
+create table emp(
+id number(7),
+last_name varchar2(25),
+first_name varchar2(25),
+dept_id number(7)
+constraint emp_dept_id_fk references dept(id));
+
+--4.
+create table employees2 as
+    select employee_id id, first_name, last_name, salary, department_id dept_id
+    from employees;
+
+--5.
+alter table employees2 read only;
+
+--6.
+insert into employees2
+values (34, 'Grant', 'Marcie', 5678, 10); -- error: read only
+
+--7.
+alter table employees2 read write;
+
+insert into employees2
+values (34, 'Grant', 'Marcie', 5678, 10);
+
+--8.
+drop table employees2;
