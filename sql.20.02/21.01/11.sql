@@ -101,4 +101,56 @@ create synonym team for departments;
 select * from team;
 
 
+--1.
+create view employee_vu as
+    select employee_id, last_name employee, department_id
+    from employees;
+
+--2.
+select * from employee_vu;
+
+--3.
+select employee, department_id
+from employee_vu;
+
+--4.
+create or replace view dept50 (empno, employee, deptno) as
+    select employee_id, last_name, department_id
+    from employees
+    where department_id = 50
+    with check option constraint dept50_vu_ck;
+
+--5.
+desc dept50
+
+--6.
+update dept50
+set deptno = 80
+where employee = 'Matos';
+
+--7.
+create sequence dept_id_seq
+    start with 300
+    increment by 10
+    maxvalue 1000;
+
+--8.
+insert into dept
+values (dept_id_seq.nextval, 'Education');
+
+--9.
+create index dept_name_idx on dept(name);
+
+--10.
+create synonym emps for employees;
+
+
+
+
+
+
+
+
+
+
 
